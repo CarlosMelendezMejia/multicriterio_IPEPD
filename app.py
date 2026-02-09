@@ -9,7 +9,7 @@ import logging
 from logging.handlers import TimedRotatingFileHandler
 from contextlib import contextmanager
 
-from flask import Flask, request
+from flask import Flask, request, redirect, url_for, session
 from flask_cors import CORS
 from dotenv import load_dotenv
 import mysql.connector
@@ -83,6 +83,14 @@ app.secret_key = os.getenv("SECRET_KEY") or os.getenv("FLASK_SECRET_KEY", "dev-s
 # CORS (si lo necesitas; en general solo para /api)
 cors_origins = os.getenv("CORS_ORIGINS", "*")
 CORS(app, resources={r"/api/*": {"origins": cors_origins}})
+
+
+@app.get("/")
+def index():
+    """Entrada por defecto: redirige a login o dashboard."""
+    if session.get("usuario_id"):
+        return redirect(url_for("eval.dashboard"))
+    return redirect(url_for("auth.login"))
 
 
 @app.before_request

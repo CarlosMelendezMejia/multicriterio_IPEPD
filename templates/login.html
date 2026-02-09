@@ -1,26 +1,37 @@
 {% extends "base.html" %}
 {% block title %}Login | Multicriterio IPEPD{% endblock %}
 
+{% block body_class %}auth-body{% endblock %}
+{% block main_class %}auth-main{% endblock %}
+
 {% block body %}
-<div class="row justify-content-center">
-  <div class="col-12 col-md-5">
-    <div class="card shadow-sm">
-      <div class="card-body p-4">
-        <h1 class="h4 mb-3">Iniciar sesión</h1>
-        <form method="POST" action="{{ url_for('auth.login_post') }}">
+<div class="row justify-content-center w-100">
+  <div class="col-12 col-sm-10 col-md-6 col-lg-5 col-xl-4">
+    <div class="card auth-card">
+      <div class="card-body">
+        <div class="auth-header mb-4">
+          <div class="auth-kicker">Multicriterio IPEPD · FES Aragón</div>
+          <h1 class="auth-title h4 mb-1">Iniciar sesión</h1>
+          <p class="auth-subtitle mb-0">Accede para continuar con tu evaluación.</p>
+        </div>
+
+        <form class="auth-form" method="POST" action="{{ url_for('auth.login_post') }}">
           <div class="mb-3">
-            <label class="form-label">Usuario</label>
-            <input name="username" class="form-control" autocomplete="username" required>
+            <label class="form-label" for="username">Usuario</label>
+            <input id="username" name="username" class="form-control" autocomplete="username" autofocus required>
           </div>
-          <div class="mb-3">
-            <label class="form-label">Contraseña</label>
-            <input name="password" type="password" class="form-control" autocomplete="current-password" required>
+
+          <div class="mb-4">
+            <label class="form-label" for="password">Contraseña</label>
+            <input id="password" name="password" type="password" class="form-control" autocomplete="current-password" required>
           </div>
+
           <button class="btn btn-primary w-100" type="submit">Entrar</button>
         </form>
       </div>
     </div>
-    <p class="text-muted small mt-3 mb-0">
+
+    <p class="text-muted small mt-3 mb-0 auth-footnote">
       Sistema de evaluación multicriterio del IPEPD.
     </p>
   </div>

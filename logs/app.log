@@ -1,0 +1,332 @@
+2026-02-09 15:42:51,179 ERROR pid=63548 __main__: Error al crear pool MySQL (host=127.0.0.1 port=3306 db=sistema_formularios user=root)
+Traceback (most recent call last):
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 354, in _open_connection
+    self._cmysql.connect(**cnx_kwargs)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+_mysql_connector.MySQLInterfaceError: Access denied for user 'root'@'localhost' (using password: YES)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\cmhcm\Documents\VISUAL STUDIO CODE\UNAM\multicriterio_IPEPD\app.py", line 125, in init_connection_pool
+    connection_pool = pooling.MySQLConnectionPool(
+        pool_name=os.getenv("DB_POOL_NAME", "multicriterio_pool"),
+    ...<2 lines>...
+        **DB_CONFIG,
+    )
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 490, in __init__
+    self.add_connection()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 613, in add_connection
+    cnx = connect(**self._cnx_config)  # type: ignore[assignment]
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 322, in connect
+    return CMySQLConnection(*args, **kwargs)
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 142, in __init__
+    self.connect(**kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\abstracts.py", line 1604, in connect
+    self._open_connection()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 360, in _open_connection
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.ProgrammingError: 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
+2026-02-09 15:42:51,269 INFO pid=63548 werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-02-09 15:42:51,269 INFO pid=63548 werkzeug: [33mPress CTRL+C to quit[0m
+2026-02-09 15:42:51,281 INFO pid=63548 werkzeug:  * Restarting with watchdog (windowsapi)
+2026-02-09 15:42:51,530 ERROR pid=34776 __main__: Error al crear pool MySQL (host=127.0.0.1 port=3306 db=sistema_formularios user=root)
+Traceback (most recent call last):
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 354, in _open_connection
+    self._cmysql.connect(**cnx_kwargs)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+_mysql_connector.MySQLInterfaceError: Access denied for user 'root'@'localhost' (using password: YES)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\cmhcm\Documents\VISUAL STUDIO CODE\UNAM\multicriterio_IPEPD\app.py", line 125, in init_connection_pool
+    connection_pool = pooling.MySQLConnectionPool(
+        pool_name=os.getenv("DB_POOL_NAME", "multicriterio_pool"),
+    ...<2 lines>...
+        **DB_CONFIG,
+    )
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 490, in __init__
+    self.add_connection()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 613, in add_connection
+    cnx = connect(**self._cnx_config)  # type: ignore[assignment]
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 322, in connect
+    return CMySQLConnection(*args, **kwargs)
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 142, in __init__
+    self.connect(**kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\abstracts.py", line 1604, in connect
+    self._open_connection()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 360, in _open_connection
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.ProgrammingError: 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
+2026-02-09 15:42:51,542 WARNING pid=34776 werkzeug:  * Debugger is active!
+2026-02-09 15:42:51,545 INFO pid=34776 werkzeug:  * Debugger PIN: 806-163-807
+2026-02-09 15:43:01,104 INFO pid=34776 werkzeug: 127.0.0.1 - - [09/Feb/2026 15:43:01] "[33mGET / HTTP/1.1[0m" 404 -
+2026-02-09 15:43:01,634 INFO pid=34776 werkzeug: 127.0.0.1 - - [09/Feb/2026 15:43:01] "[33mGET / HTTP/1.1[0m" 404 -
+2026-02-09 15:43:01,950 INFO pid=34776 werkzeug: 127.0.0.1 - - [09/Feb/2026 15:43:01] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-02-09 15:43:56,229 INFO pid=34776 werkzeug:  * Detected change in 'C:\\Users\\cmhcm\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\werkzeug\\security.py', reloading
+2026-02-09 15:43:56,685 INFO pid=63548 werkzeug:  * Restarting with watchdog (windowsapi)
+2026-02-09 15:43:57,149 ERROR pid=72252 __main__: Error al crear pool MySQL (host=127.0.0.1 port=3306 db=sistema_formularios user=root)
+Traceback (most recent call last):
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 354, in _open_connection
+    self._cmysql.connect(**cnx_kwargs)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+_mysql_connector.MySQLInterfaceError: Access denied for user 'root'@'localhost' (using password: YES)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\cmhcm\Documents\VISUAL STUDIO CODE\UNAM\multicriterio_IPEPD\app.py", line 125, in init_connection_pool
+    connection_pool = pooling.MySQLConnectionPool(
+        pool_name=os.getenv("DB_POOL_NAME", "multicriterio_pool"),
+    ...<2 lines>...
+        **DB_CONFIG,
+    )
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 490, in __init__
+    self.add_connection()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 613, in add_connection
+    cnx = connect(**self._cnx_config)  # type: ignore[assignment]
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 322, in connect
+    return CMySQLConnection(*args, **kwargs)
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 142, in __init__
+    self.connect(**kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\abstracts.py", line 1604, in connect
+    self._open_connection()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 360, in _open_connection
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.ProgrammingError: 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
+2026-02-09 15:43:57,172 WARNING pid=72252 werkzeug:  * Debugger is active!
+2026-02-09 15:43:57,174 INFO pid=72252 werkzeug:  * Debugger PIN: 806-163-807
+2026-02-09 15:47:31,646 INFO pid=72252 werkzeug:  * Detected change in 'C:\\Users\\cmhcm\\Documents\\VISUAL STUDIO CODE\\UNAM\\multicriterio_IPEPD\\app.py', reloading
+2026-02-09 15:47:31,647 INFO pid=72252 werkzeug:  * Detected change in 'C:\\Users\\cmhcm\\Documents\\VISUAL STUDIO CODE\\UNAM\\multicriterio_IPEPD\\app.py', reloading
+2026-02-09 15:47:31,648 INFO pid=72252 werkzeug:  * Detected change in 'C:\\Users\\cmhcm\\Documents\\VISUAL STUDIO CODE\\UNAM\\multicriterio_IPEPD\\app.py', reloading
+2026-02-09 15:47:32,537 INFO pid=63548 werkzeug:  * Restarting with watchdog (windowsapi)
+2026-02-09 15:47:32,953 ERROR pid=73192 __main__: Error al crear pool MySQL (host=127.0.0.1 port=3306 db=sistema_formularios user=root)
+Traceback (most recent call last):
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 354, in _open_connection
+    self._cmysql.connect(**cnx_kwargs)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+_mysql_connector.MySQLInterfaceError: Access denied for user 'root'@'localhost' (using password: YES)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\cmhcm\Documents\VISUAL STUDIO CODE\UNAM\multicriterio_IPEPD\app.py", line 133, in init_connection_pool
+    connection_pool = pooling.MySQLConnectionPool(
+        pool_name=os.getenv("DB_POOL_NAME", "multicriterio_pool"),
+    ...<2 lines>...
+        **DB_CONFIG,
+    )
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 490, in __init__
+    self.add_connection()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 613, in add_connection
+    cnx = connect(**self._cnx_config)  # type: ignore[assignment]
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 322, in connect
+    return CMySQLConnection(*args, **kwargs)
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 142, in __init__
+    self.connect(**kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\abstracts.py", line 1604, in connect
+    self._open_connection()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 360, in _open_connection
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.ProgrammingError: 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
+2026-02-09 15:47:32,972 WARNING pid=73192 werkzeug:  * Debugger is active!
+2026-02-09 15:47:32,975 INFO pid=73192 werkzeug:  * Debugger PIN: 806-163-807
+2026-02-09 15:48:09,384 INFO pid=73192 werkzeug:  * Detected change in 'C:\\Users\\cmhcm\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\capture.py', reloading
+2026-02-09 15:48:09,398 INFO pid=73192 werkzeug:  * Detected change in 'C:\\Users\\cmhcm\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\doctest.py', reloading
+2026-02-09 15:48:09,409 INFO pid=73192 werkzeug:  * Detected change in 'C:\\Users\\cmhcm\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\fixtures.py', reloading
+2026-02-09 15:48:09,443 INFO pid=73192 werkzeug:  * Detected change in 'C:\\Users\\cmhcm\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\junitxml.py', reloading
+2026-02-09 15:48:09,456 INFO pid=73192 werkzeug:  * Detected change in 'C:\\Users\\cmhcm\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\legacypath.py', reloading
+2026-02-09 15:48:09,481 INFO pid=73192 werkzeug:  * Detected change in 'C:\\Users\\cmhcm\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\logging.py', reloading
+2026-02-09 15:48:09,498 INFO pid=73192 werkzeug:  * Detected change in 'C:\\Users\\cmhcm\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\monkeypatch.py', reloading
+2026-02-09 15:48:09,506 INFO pid=73192 werkzeug:  * Detected change in 'C:\\Users\\cmhcm\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\recwarn.py', reloading
+2026-02-09 15:48:09,513 INFO pid=73192 werkzeug:  * Detected change in 'C:\\Users\\cmhcm\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\_pytest\\tmpdir.py', reloading
+2026-02-09 15:48:10,073 INFO pid=63548 werkzeug:  * Restarting with watchdog (windowsapi)
+2026-02-09 15:48:10,343 ERROR pid=57968 __main__: Error al crear pool MySQL (host=127.0.0.1 port=3306 db=sistema_formularios user=root)
+Traceback (most recent call last):
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 354, in _open_connection
+    self._cmysql.connect(**cnx_kwargs)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+_mysql_connector.MySQLInterfaceError: Access denied for user 'root'@'localhost' (using password: YES)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\cmhcm\Documents\VISUAL STUDIO CODE\UNAM\multicriterio_IPEPD\app.py", line 133, in init_connection_pool
+    connection_pool = pooling.MySQLConnectionPool(
+        pool_name=os.getenv("DB_POOL_NAME", "multicriterio_pool"),
+    ...<2 lines>...
+        **DB_CONFIG,
+    )
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 490, in __init__
+    self.add_connection()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 613, in add_connection
+    cnx = connect(**self._cnx_config)  # type: ignore[assignment]
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 322, in connect
+    return CMySQLConnection(*args, **kwargs)
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 142, in __init__
+    self.connect(**kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\abstracts.py", line 1604, in connect
+    self._open_connection()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 360, in _open_connection
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.ProgrammingError: 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
+2026-02-09 15:48:10,353 WARNING pid=57968 werkzeug:  * Debugger is active!
+2026-02-09 15:48:10,355 INFO pid=57968 werkzeug:  * Debugger PIN: 806-163-807
+2026-02-09 15:48:43,297 INFO pid=57968 werkzeug:  * Detected change in 'C:\\Users\\cmhcm\\Documents\\VISUAL STUDIO CODE\\UNAM\\multicriterio_IPEPD\\app.py', reloading
+2026-02-09 15:48:43,297 INFO pid=57968 werkzeug:  * Detected change in 'C:\\Users\\cmhcm\\Documents\\VISUAL STUDIO CODE\\UNAM\\multicriterio_IPEPD\\app.py', reloading
+2026-02-09 15:48:43,299 INFO pid=57968 werkzeug:  * Detected change in 'C:\\Users\\cmhcm\\Documents\\VISUAL STUDIO CODE\\UNAM\\multicriterio_IPEPD\\app.py', reloading
+2026-02-09 15:48:43,438 INFO pid=63548 werkzeug:  * Restarting with watchdog (windowsapi)
+2026-02-09 15:48:43,684 ERROR pid=43540 __main__: Error al crear pool MySQL (host=127.0.0.1 port=3306 db=sistema_formularios user=root)
+Traceback (most recent call last):
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 354, in _open_connection
+    self._cmysql.connect(**cnx_kwargs)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+_mysql_connector.MySQLInterfaceError: Access denied for user 'root'@'localhost' (using password: YES)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\cmhcm\Documents\VISUAL STUDIO CODE\UNAM\multicriterio_IPEPD\app.py", line 133, in init_connection_pool
+    connection_pool = pooling.MySQLConnectionPool(
+        pool_name=os.getenv("DB_POOL_NAME", "multicriterio_pool"),
+    ...<2 lines>...
+        **DB_CONFIG,
+    )
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 490, in __init__
+    self.add_connection()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 613, in add_connection
+    cnx = connect(**self._cnx_config)  # type: ignore[assignment]
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 322, in connect
+    return CMySQLConnection(*args, **kwargs)
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 142, in __init__
+    self.connect(**kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\abstracts.py", line 1604, in connect
+    self._open_connection()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 360, in _open_connection
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.ProgrammingError: 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
+2026-02-09 15:48:43,695 WARNING pid=43540 werkzeug:  * Debugger is active!
+2026-02-09 15:48:43,696 INFO pid=43540 werkzeug:  * Debugger PIN: 806-163-807
+2026-02-09 15:48:48,145 ERROR pid=79808 __main__: Error al crear pool MySQL (host=127.0.0.1 port=3306 db=multicriterio_IPEPD user=root)
+Traceback (most recent call last):
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 354, in _open_connection
+    self._cmysql.connect(**cnx_kwargs)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+_mysql_connector.MySQLInterfaceError: Access denied for user 'root'@'localhost' (using password: NO)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\cmhcm\Documents\VISUAL STUDIO CODE\UNAM\multicriterio_IPEPD\app.py", line 133, in init_connection_pool
+    connection_pool = pooling.MySQLConnectionPool(
+        pool_name=os.getenv("DB_POOL_NAME", "multicriterio_pool"),
+    ...<2 lines>...
+        **DB_CONFIG,
+    )
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 490, in __init__
+    self.add_connection()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 613, in add_connection
+    cnx = connect(**self._cnx_config)  # type: ignore[assignment]
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 322, in connect
+    return CMySQLConnection(*args, **kwargs)
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 142, in __init__
+    self.connect(**kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\abstracts.py", line 1604, in connect
+    self._open_connection()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 360, in _open_connection
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.ProgrammingError: 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+2026-02-09 15:48:48,161 INFO pid=79808 werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-02-09 15:48:48,161 INFO pid=79808 werkzeug: [33mPress CTRL+C to quit[0m
+2026-02-09 15:48:48,165 INFO pid=79808 werkzeug:  * Restarting with watchdog (windowsapi)
+2026-02-09 15:48:48,381 ERROR pid=45176 __main__: Error al crear pool MySQL (host=127.0.0.1 port=3306 db=multicriterio_IPEPD user=root)
+Traceback (most recent call last):
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 354, in _open_connection
+    self._cmysql.connect(**cnx_kwargs)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+_mysql_connector.MySQLInterfaceError: Access denied for user 'root'@'localhost' (using password: NO)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\cmhcm\Documents\VISUAL STUDIO CODE\UNAM\multicriterio_IPEPD\app.py", line 133, in init_connection_pool
+    connection_pool = pooling.MySQLConnectionPool(
+        pool_name=os.getenv("DB_POOL_NAME", "multicriterio_pool"),
+    ...<2 lines>...
+        **DB_CONFIG,
+    )
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 490, in __init__
+    self.add_connection()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 613, in add_connection
+    cnx = connect(**self._cnx_config)  # type: ignore[assignment]
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\pooling.py", line 322, in connect
+    return CMySQLConnection(*args, **kwargs)
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 142, in __init__
+    self.connect(**kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\abstracts.py", line 1604, in connect
+    self._open_connection()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\cmhcm\AppData\Local\Programs\Python\Python313\Lib\site-packages\mysql\connector\connection_cext.py", line 360, in _open_connection
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.ProgrammingError: 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+2026-02-09 15:48:48,393 WARNING pid=45176 werkzeug:  * Debugger is active!
+2026-02-09 15:48:48,394 INFO pid=45176 werkzeug:  * Debugger PIN: 806-163-807
+2026-02-09 15:49:00,405 INFO pid=45176 werkzeug: 127.0.0.1 - - [09/Feb/2026 15:49:00] "[32mGET / HTTP/1.1[0m" 302 -
+2026-02-09 15:49:00,445 INFO pid=45176 werkzeug: 127.0.0.1 - - [09/Feb/2026 15:49:00] "GET /login HTTP/1.1" 200 -
+2026-02-09 15:49:00,926 INFO pid=45176 werkzeug: 127.0.0.1 - - [09/Feb/2026 15:49:00] "GET /static/css/styles.css HTTP/1.1" 200 -
+2026-02-09 15:51:15,755 INFO pid=73172 __main__: Pool MySQL listo (pool_size=5 host=127.0.0.1 port=3306 db=multicriterio_IPEPD user=root)
+2026-02-09 15:51:15,770 INFO pid=73172 werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-02-09 15:51:15,770 INFO pid=73172 werkzeug: [33mPress CTRL+C to quit[0m
+2026-02-09 15:51:15,774 INFO pid=73172 werkzeug:  * Restarting with watchdog (windowsapi)
+2026-02-09 15:51:16,000 INFO pid=77776 __main__: Pool MySQL listo (pool_size=5 host=127.0.0.1 port=3306 db=multicriterio_IPEPD user=root)
+2026-02-09 15:51:16,010 WARNING pid=77776 werkzeug:  * Debugger is active!
+2026-02-09 15:51:16,011 INFO pid=77776 werkzeug:  * Debugger PIN: 806-163-807
+2026-02-09 15:51:51,740 INFO pid=77776 werkzeug: 127.0.0.1 - - [09/Feb/2026 15:51:51] "GET /login HTTP/1.1" 200 -
+2026-02-09 15:51:51,971 INFO pid=77776 werkzeug: 127.0.0.1 - - [09/Feb/2026 15:51:51] "GET /static/css/styles.css HTTP/1.1" 200 -
+2026-02-09 15:51:51,976 INFO pid=77776 werkzeug: 127.0.0.1 - - [09/Feb/2026 15:51:51] "GET /static/js/api.js HTTP/1.1" 200 -
+2026-02-09 15:51:59,756 INFO pid=77776 werkzeug: 127.0.0.1 - - [09/Feb/2026 15:51:59] "GET /login HTTP/1.1" 200 -
+2026-02-09 15:51:59,778 INFO pid=77776 werkzeug: 127.0.0.1 - - [09/Feb/2026 15:51:59] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2026-02-09 15:52:00,008 INFO pid=77776 werkzeug: 127.0.0.1 - - [09/Feb/2026 15:52:00] "[36mGET /static/js/api.js HTTP/1.1[0m" 304 -

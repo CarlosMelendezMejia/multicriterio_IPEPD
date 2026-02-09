@@ -44,6 +44,71 @@ body {
     background-color: #f8f9fa;
 }
 
+/* ============================================================================
+   AUTH / LOGIN (minimalista + estético)
+   ============================================================================ */
+.auth-body {
+    background:
+        radial-gradient(900px circle at 15% 10%, rgba(242, 188, 87, 0.28), transparent 55%),
+        radial-gradient(700px circle at 85% 0%, rgba(191, 135, 31, 0.16), transparent 60%),
+        linear-gradient(180deg, #fbfaf7 0%, #f8f9fa 65%, #f7f8fa 100%);
+}
+
+.auth-main {
+    min-height: calc(100vh - 56px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-card {
+    border-radius: 14px;
+    border: 1px solid rgba(115, 101, 77, 0.15);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+    background-color: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(6px);
+}
+
+.auth-card .card-body {
+    padding: 2rem;
+}
+
+.auth-kicker {
+    font-size: 0.8rem;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: rgba(115, 101, 77, 0.8);
+}
+
+.auth-title {
+    font-weight: 650;
+    color: var(--c3);
+}
+
+.auth-subtitle {
+    color: #6c757d;
+}
+
+.auth-form .form-control {
+    border-radius: 10px;
+    padding: 0.75rem 0.9rem;
+}
+
+.auth-form .btn-primary {
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+}
+
+.auth-footnote {
+    text-align: center;
+}
+
+@media (max-width: 576px) {
+    .auth-card .card-body {
+        padding: 1.5rem;
+    }
+}
+
 /* Ajuste pequeño: el main de nuestras templates ya usa container+py-4,
    pero esto ayuda si agregas footer fijo más adelante */
 .main-content {
