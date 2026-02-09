@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Menú | Multicriterio IPEPD{% endblock %}
+
+{% block body %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h1 class="h4 mb-1">Menú de instrumentos</h1>
+    <p class="text-muted mb-0">Selecciona un instrumento para iniciar o continuar tu evaluación.</p>
+  </div>
+</div>
+
+<div class="row g-3" id="instrumentosGrid">
+  {% for ins in instrumentos %}
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <h2 class="h5 mb-1">{{ ins.nombre }}</h2>
+            <div class="text-muted small">Instrumento #{{ ins.instrumento_id }}</div>
+          </div>
+          {% if ins.estado == "no_iniciado" %}
+            <span class="badge text-bg-secondary">No iniciado</span>
+          {% elif ins.estado == "draft" %}
+            <span class="badge text-bg-info">En progreso</span>
+          {% elif ins.estado == "submitted" %}
+            <span class="badge text-bg-success">Enviado</span>
+          {% else %}
+            <span class="badge text-bg-secondary">—</span>
+          {% endif %}
+        </div>
+
+        <hr>
+
+        <div class="d-flex gap-2">
+          {% if ins.estado == "submitted" %}
+            <a class="btn btn-outline-primary"
+               href="{{ url_for('eval.resumen', instrumento_id=ins.instrumento_id) }}">
+              Ver resumen
+            </a>
+          {% else %}
+            <a class="btn btn-primary"
+               href="{{ url_for('eval.categorias', instrumento_id=ins.instrumento_id) }}">
+              {% if ins.estado == "draft" %}Continuar{% else %}Iniciar{% endif %}
+            </a>
+          {% endif %}
+        </div>
+
+        {% if ins.submitted_at %}
+          <div class="text-muted small mt-2">Enviado: {{ ins.submitted_at }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
