@@ -12,6 +12,11 @@
     --c3: #73654D;  /* Café oscuro */
     --c4: #726C6E;  /* Gris */
 
+    --surface: rgba(255, 255, 255, 0.92);
+    --surface-solid: #ffffff;
+    --border-soft: rgba(115, 101, 77, 0.16);
+    --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.08);
+
     /* Sobrescribir primary de Bootstrap */
     --bs-primary: #BF871F;
     --bs-primary-rgb: 191, 135, 31;
@@ -41,7 +46,61 @@
 body {
     font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #333;
-    background-color: #f8f9fa;
+    background:
+        radial-gradient(900px circle at 12% -10%, rgba(242, 188, 87, 0.22), transparent 55%),
+        radial-gradient(800px circle at 90% -20%, rgba(191, 135, 31, 0.12), transparent 60%),
+        linear-gradient(180deg, #fbfaf7 0%, #f8f9fa 55%, #f7f8fa 100%);
+}
+
+/* ============================================================================
+   LAYOUT / COMPONENTES (estilo consistente)
+   ============================================================================ */
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.page-title {
+    font-weight: 650;
+    color: var(--c3);
+    letter-spacing: 0.1px;
+}
+
+.page-lead {
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+.app-card {
+    border-radius: 14px;
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-soft);
+    background-color: var(--surface);
+    backdrop-filter: blur(6px);
+}
+
+.app-card .card-body {
+    padding: 1.75rem;
+}
+
+.section-kicker {
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
+    color: rgba(115, 101, 77, 0.8);
+}
+
+.hr-soft {
+    border-top: 1px solid rgba(115, 101, 77, 0.14);
+    opacity: 1;
+}
+
+@media (max-width: 576px) {
+    .app-card .card-body {
+        padding: 1.25rem;
+    }
 }
 
 /* ============================================================================
@@ -124,6 +183,9 @@ body {
 .navbar .navbar-brand {
     font-weight: 600;
     letter-spacing: 0.2px;
+}
+.navbar {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 .navbar .btn-outline-light:hover {
     background-color: rgba(255, 255, 255, 0.12);

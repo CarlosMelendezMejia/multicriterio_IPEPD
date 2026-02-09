@@ -2,17 +2,20 @@
 {% block title %}Resumen | {{ instrumento_nombre }}{% endblock %}
 
 {% block body %}
-<div class="mb-3">
-  <h1 class="h4 mb-1">{{ instrumento_nombre }}</h1>
-  <p class="text-muted mb-0">
+<div class="page-header">
+  <div>
+  <div class="section-kicker mb-1">Resumen</div>
+  <h1 class="h4 mb-1 page-title">{{ instrumento_nombre }}</h1>
+  <p class="page-lead">
     Revisa tus respuestas. Al enviar, quedará en estado <strong>Enviado</strong>.
     {% if is_admin %}
       Como admin, podrás reabrir evaluaciones enviadas.
     {% endif %}
   </p>
+  </div>
 </div>
 
-<div class="card shadow-sm">
+<div class="card app-card">
   <div class="card-body">
     <div class="d-flex justify-content-between align-items-center mb-2">
       <div class="text-muted small" id="statusText">Cargando resumen...</div>
@@ -34,13 +37,17 @@
   </div>
 </div>
 
+<script type="application/json" id="ipepd-ctx">
+  {{ {
+    'instrumentoId': instrumento_id,
+    'evaluacionId': evaluacion_id,
+    'evaluacionStatus': evaluacion_status,
+    'isAdmin': is_admin
+  } | tojson }}
+</script>
+
 <script>
-  window.IPEPD_CTX = {
-    instrumentoId: {{ instrumento_id }},
-    evaluacionId: {{ evaluacion_id if evaluacion_id else 'null' }},
-    evaluacionStatus: {{ evaluacion_status|tojson }},
-    isAdmin: {{ 'true' if is_admin else 'false' }}
-  };
+  window.IPEPD_CTX = JSON.parse(document.getElementById("ipepd-ctx").textContent);
 </script>
 {% endblock %}
 
