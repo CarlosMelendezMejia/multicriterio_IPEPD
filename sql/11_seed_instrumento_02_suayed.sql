@@ -84,3 +84,24 @@ INSERT INTO item (instrumento_id, categoria_code, orden, codigo_visible, conteni
 ON DUPLICATE KEY UPDATE
   contenido = VALUES(contenido),
   is_active = 1;
+
+-- -------------------------
+-- Vincular sub-ítems con su padre (parent_item_id)
+-- -------------------------
+-- CAT1: 1.5.1–1.5.4 son hijos de 1.5
+UPDATE item sub
+  JOIN item parent
+    ON parent.instrumento_id = sub.instrumento_id
+   AND parent.codigo_visible = '1.5'
+SET sub.parent_item_id = parent.item_id
+WHERE sub.instrumento_id = 2
+  AND sub.codigo_visible IN ('1.5.1','1.5.2','1.5.3','1.5.4');
+
+-- CAT3: 3.4.1–3.4.3 son hijos de 3.4
+UPDATE item sub
+  JOIN item parent
+    ON parent.instrumento_id = sub.instrumento_id
+   AND parent.codigo_visible = '3.4'
+SET sub.parent_item_id = parent.item_id
+WHERE sub.instrumento_id = 2
+  AND sub.codigo_visible IN ('3.4.1','3.4.2','3.4.3');

@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS item (
   orden INT NOT NULL,                    -- 1..M dentro de su categoría
   codigo_visible VARCHAR(10) NOT NULL,   -- "1.1", "4.7", etc.
   contenido TEXT NOT NULL,
+  parent_item_id INT UNSIGNED NULL DEFAULT NULL,  -- NULL = ítem normal/padre; SET = sub-ítem
   is_active TINYINT(1) NOT NULL DEFAULT 1,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -68,10 +69,17 @@ CREATE TABLE IF NOT EXISTS item (
   UNIQUE KEY uk_item_orden (instrumento_id, categoria_code, orden),
   UNIQUE KEY uk_item_codigo_visible (instrumento_id, codigo_visible),
   KEY idx_item_categoria (instrumento_id, categoria_code),
+  KEY idx_item_parent (parent_item_id),
 
   CONSTRAINT fk_item_categoria
     FOREIGN KEY (instrumento_id, categoria_code)
     REFERENCES categoria(instrumento_id, categoria_code)
+    ON UPDATE RESTRICT
+    ON DELETE RESTRICT,
+
+  CONSTRAINT fk_item_parent
+    FOREIGN KEY (parent_item_id)
+    REFERENCES item(item_id)
     ON UPDATE RESTRICT
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;
@@ -184,10 +192,11 @@ CREATE TABLE IF NOT EXISTS evaluacion_item (
   evaluacion_id BIGINT UNSIGNED NOT NULL,
   item_id INT UNSIGNED NOT NULL,
   categoria_code VARCHAR(10) NOT NULL,
+  rank_group INT UNSIGNED NOT NULL DEFAULT 0,  -- 0 = ítems principales; >0 = parent_item_id del grupo de sub-ítems
   rank_value INT NOT NULL,
 
   PRIMARY KEY (evaluacion_id, item_id),
-  UNIQUE KEY uk_evalitem_rank (evaluacion_id, categoria_code, rank_value),
+  UNIQUE KEY uk_evalitem_rank (evaluacion_id, categoria_code, rank_group, rank_value),
   KEY idx_evalitem_item (item_id),
 
   CONSTRAINT fk_evalitem_eval

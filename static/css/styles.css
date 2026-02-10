@@ -456,3 +456,29 @@ code {
     height: 1rem;
     border-width: 0.15em;
 }
+
+/* ============================================================================
+   SUB-ÍTEMS (ranking independiente con sangría visual)
+   ============================================================================ */
+.sub-item-row {
+    background-color: rgba(242, 188, 87, 0.06);
+}
+
+.sub-item-row td.sub-item-cell {
+    padding-left: 2.2rem;
+    border-left: 3px solid var(--c2);
+}
+
+.sub-item-row .sub-select {
+    border-color: var(--c2);
+}
+
+.sub-item-row .sub-select:focus {
+    box-shadow: 0 0 0 0.25rem rgba(242, 188, 87, 0.3);
+}
+
+/* Resumen: sub-item badges use lighter color */
+.sub-item-row .badge.text-bg-secondary {
+    background-color: var(--c2) !important;
+    color: #333 !important;
+}

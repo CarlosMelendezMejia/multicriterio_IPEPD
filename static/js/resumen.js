@@ -88,6 +88,18 @@
     for (const c of categorias) {
       const code = c.categoria_code;
       const lista = itemsByCat.get(code) || [];
+
+      // Separate main items and sub-items
+      const mainItems = lista.filter(it => !it.parent_item_id);
+      const subByParent = new Map();
+      for (const it of lista) {
+        if (it.parent_item_id) {
+          const pid = it.parent_item_id;
+          if (!subByParent.has(pid)) subByParent.set(pid, []);
+          subByParent.get(pid).push(it);
+        }
+      }
+
       html += `
         <div class="mt-3">
           <div class="fw-semibold">${escapeHtml(c.nombre)} <span class="text-muted small">(${escapeHtml(code)})</span></div>
@@ -102,7 +114,7 @@
               <tbody>
       `;
 
-      for (const it of lista) {
+      for (const it of mainItems) {
         html += `
           <tr>
             <td><span class="badge text-bg-dark">${it.rank_value ?? "—"}</span></td>
@@ -112,6 +124,20 @@
             </td>
           </tr>
         `;
+
+        // Render sub-items indented
+        const subs = subByParent.get(it.item_id) || [];
+        for (const sub of subs) {
+          html += `
+            <tr class="sub-item-row">
+              <td><span class="badge text-bg-secondary">${sub.rank_value ?? "—"}</span></td>
+              <td class="sub-item-cell">
+                <div class="text-muted small">${escapeHtml(sub.codigo_visible || "")}</div>
+                <div>${escapeHtml(sub.contenido || "")}</div>
+              </td>
+            </tr>
+          `;
+        }
       }
 
       html += `</tbody></table></div></div>`;

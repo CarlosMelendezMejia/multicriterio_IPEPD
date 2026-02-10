@@ -132,12 +132,15 @@ def catalogo_items(instrumento_id: int, categoria_code: str):
         return _json_error("unauthorized", 401)
 
     rows = query_all(
-        "SELECT item_id, orden, codigo_visible, contenido "
+        "SELECT item_id, orden, codigo_visible, contenido, parent_item_id "
         "FROM item "
         "WHERE instrumento_id=%s AND categoria_code=%s AND is_active=1 "
         "ORDER BY orden",
         (instrumento_id, categoria_code)
     )
+    # Coerce parent_item_id to int or null for JSON
+    for r in rows:
+        r["parent_item_id"] = int(r["parent_item_id"]) if r.get("parent_item_id") else None
     return jsonify(rows)
 
 
@@ -226,10 +229,15 @@ def init_evaluacion(instrumento_id: int):
         code = c["categoria_code"]
         orden = int(c["orden"])
 
+        # Total rankeable items (main items + sub-items) for this category
         total_items = query_one(
             "SELECT COUNT(*) AS total FROM item WHERE instrumento_id=%s AND categoria_code=%s AND is_active=1",
             (instrumento_id, code)
         )["total"]
+
+        # Count only items that are NOT parent-headers (i.e. items with no children)
+        # Parent-headers have children, so they are still ranked in the main group.
+        # Actually all items get ranked, so total_items is correct.
 
         saved_items = query_one(
             "SELECT COUNT(*) AS total FROM evaluacion_item WHERE evaluacion_id=%s AND categoria_code=%s",
@@ -357,24 +365,40 @@ def guardar_ranking_items(evaluacion_id: int, categoria_code: str):
 
     # Validar items válidos de esa categoría
     items_validos = query_all(
-        "SELECT item_id FROM item WHERE instrumento_id=%s AND categoria_code=%s AND is_active=1",
+        "SELECT item_id, parent_item_id FROM item WHERE instrumento_id=%s AND categoria_code=%s AND is_active=1",
         (instrumento_id, categoria_code)
     )
-    valid_item_ids = {int(x["item_id"]) for x in items_validos}
-    if not valid_item_ids:
+    valid_item_map = {int(x["item_id"]): (int(x["parent_item_id"]) if x.get("parent_item_id") else None) for x in items_validos}
+    if not valid_item_map:
         return _json_error("categoria_sin_items", 400)
 
     rows = []
     for r in ranks:
         item_id = r.get("item_id")
         val = r.get("rank_value")
+        rg = r.get("rank_group", 0)
         if not isinstance(item_id, int) or not isinstance(val, int):
             return _json_error("payload_invalid_rank", 400)
-        if item_id not in valid_item_ids:
+        if item_id not in valid_item_map:
             return _json_error("item_invalido", 400, {"item_id": item_id})
         if val < 1:
             return _json_error("rank_value_min_1", 400, {"item_id": item_id})
-        rows.append((evaluacion_id, item_id, categoria_code, val))
+        # Derive rank_group from item’s parent_item_id (0 for main items, parent_id for sub-items)
+        parent = valid_item_map[item_id]
+        rank_group = parent if parent else 0
+        rows.append((evaluacion_id, item_id, categoria_code, rank_group, val))
+
+    # Validate uniqueness per rank_group
+    from collections import Counter
+    group_vals = Counter()
+    for (_eid, _iid, _cc, rg, rv) in rows:
+        key = (rg, rv)
+        group_vals[key] += 1
+        if group_vals[key] > 1:
+            return _json_error(
+                "rank_duplicado", 400,
+                {"detalle": f"Valor {rv} repetido en grupo de ranking {rg}."}
+            )
 
     try:
         # Idempotente por categoría
@@ -383,8 +407,8 @@ def guardar_ranking_items(evaluacion_id: int, categoria_code: str):
             (evaluacion_id, categoria_code)
         )
         executemany(
-            "INSERT INTO evaluacion_item (evaluacion_id, item_id, categoria_code, rank_value) "
-            "VALUES (%s,%s,%s,%s)",
+            "INSERT INTO evaluacion_item (evaluacion_id, item_id, categoria_code, rank_group, rank_value) "
+            "VALUES (%s,%s,%s,%s,%s)",
             rows
         )
         commit()
@@ -395,7 +419,7 @@ def guardar_ranking_items(evaluacion_id: int, categoria_code: str):
             return _json_error(
                 "rank_duplicado",
                 400,
-                {"detalle": "Los valores deben ser únicos del 1 al M (sin repetición) dentro de la categoría."}
+                {"detalle": "Los valores deben ser únicos (sin repetición) dentro de cada grupo de ranking."}
             )
         return _json_error("db_error_guardar_items", 500)
 
@@ -437,7 +461,8 @@ def resumen(evaluacion_id: int):
     # Ítems con rank (ordenados por categoria/orden)
     items = query_all(
         "SELECT c.categoria_code, c.orden AS categoria_orden, c.nombre AS categoria_nombre, "
-        "       i.item_id, i.orden AS item_orden, i.codigo_visible, i.contenido, ei.rank_value "
+        "       i.item_id, i.orden AS item_orden, i.codigo_visible, i.contenido, "
+        "       i.parent_item_id, ei.rank_value, ei.rank_group "
         "FROM categoria c "
         "JOIN item i ON i.instrumento_id=c.instrumento_id AND i.categoria_code=c.categoria_code AND i.is_active=1 "
         "LEFT JOIN evaluacion_item ei ON ei.evaluacion_id=%s AND ei.item_id=i.item_id "
@@ -445,6 +470,10 @@ def resumen(evaluacion_id: int):
         "ORDER BY c.orden, i.orden",
         (evaluacion_id, instrumento_id)
     )
+    # Coerce parent_item_id
+    for it in items:
+        it["parent_item_id"] = int(it["parent_item_id"]) if it.get("parent_item_id") else None
+        it["rank_group"] = int(it["rank_group"]) if it.get("rank_group") is not None else 0
 
     return jsonify({
         "evaluacion": {
