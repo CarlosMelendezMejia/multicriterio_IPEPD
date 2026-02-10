@@ -22,6 +22,7 @@
   let evaluacionId = null;
   let categorias = [];
   let existingRanks = new Map(); // categoria_code -> rank_value
+  let lastConflictAt = 0;
 
   function setStatus(msg) {
     if (statusText) statusText.textContent = msg;
@@ -61,6 +62,48 @@
       used.add(r.rank_value);
     }
     return { ok: true, ranks };
+  }
+
+  function refreshUniqueOptions() {
+    const selects = Array.from(container.querySelectorAll("select[data-cat]"));
+    const used = new Map(); // value -> select
+
+    for (const s of selects) {
+      if (s.value) used.set(String(s.value), s);
+    }
+
+    for (const s of selects) {
+      for (const opt of Array.from(s.options)) {
+        if (!opt.value) continue;
+        const owner = used.get(String(opt.value));
+        opt.disabled = Boolean(owner && owner !== s);
+      }
+    }
+  }
+
+  function wireUniqueSelects() {
+    container.addEventListener("change", (e) => {
+      const target = e.target;
+      if (!target || target.tagName !== "SELECT") return;
+      if (!target.matches("select[data-cat]")) return;
+
+      // Si el valor ya está elegido en otro select, lo limpiamos.
+      if (target.value) {
+        const val = String(target.value);
+        const other = Array.from(container.querySelectorAll("select[data-cat]"))
+          .find(s => s !== target && String(s.value) === val);
+        if (other) {
+          target.value = "";
+          const now = Date.now();
+          if (now - lastConflictAt > 800) {
+            showAlert("Ese valor ya está asignado a otra categoría. Elige un valor distinto.", "warning");
+            lastConflictAt = now;
+          }
+        }
+      }
+
+      refreshUniqueOptions();
+    });
   }
 
   function render() {
@@ -110,10 +153,7 @@
     html += `</tbody></table></div>`;
     container.innerHTML = html;
 
-    // UX: al cambiar, podemos marcar conflicto si hay repetidos (simple)
-    container.addEventListener("change", () => {
-      // opcional: podríamos añadir feedback visual, por ahora no.
-    }, { once: true });
+    refreshUniqueOptions();
   }
 
   async function init() {
@@ -137,6 +177,7 @@
       }
 
       render();
+      wireUniqueSelects();
       setStatus("Listo. Asigna valores 1..N (sin repetición).");
     } catch (e) {
       console.error(e);
