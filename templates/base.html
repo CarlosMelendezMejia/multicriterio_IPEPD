@@ -12,11 +12,15 @@
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url_for('eval.dashboard') }}">Multicriterio IPEPD</a>
+      {% if session.get("is_admin") %}
+        <a class="navbar-brand" href="{{ url_for('admin.panel') }}">Multicriterio IPEPD</a>
+      {% else %}
+        <a class="navbar-brand" href="{{ url_for('eval.dashboard') }}">Multicriterio IPEPD</a>
+      {% endif %}
 
       <div class="d-flex align-items-center gap-2">
         {% if session.get("usuario_id") %}
-          {% if is_admin %}
+          {% if session.get("is_admin") %}
             <span class="badge text-bg-warning">ADMIN</span>
           {% endif %}
           <a class="btn btn-sm btn-outline-light" href="{{ url_for('auth.logout') }}">Salir</a>

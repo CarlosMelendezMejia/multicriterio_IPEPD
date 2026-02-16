@@ -31,8 +31,10 @@ def _is_admin_role_name(role_name: str) -> bool:
 
 @bp.get("/login")
 def login():
-    # Si ya hay sesión, manda al dashboard
+    # Si ya hay sesión, manda al panel correcto
     if session.get("usuario_id"):
+        if session.get("is_admin"):
+            return redirect(url_for("admin.panel"))
         return redirect(url_for("eval.dashboard"))
     return render_template("login.html")
 
@@ -72,6 +74,9 @@ def login_post():
     session["rol_id"] = int(user["rol_id"])
     session["is_admin"] = bool(is_admin)
 
+    # Admin va al panel de administración, evaluador al dashboard
+    if is_admin:
+        return redirect(url_for("admin.panel"))
     return redirect(url_for("eval.dashboard"))
 
 

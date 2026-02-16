@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block title %}Panel de Administración — Multicriterio IPEPD{% endblock %}
+
+{% block body %}
+<div class="page-header mb-4">
+  <p class="section-kicker mb-1">Panel de Administración</p>
+  <h1 class="page-title">Gestión del Sistema</h1>
+  <p class="page-lead">Administra usuarios, roles y consulta los resultados de las evaluaciones.</p>
+</div>
+
+<!-- ========== TABS ========== -->
+<ul class="nav nav-tabs admin-tabs mb-4" id="adminTabs" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="tab-users" data-bs-toggle="tab"
+            data-bs-target="#pane-users" type="button" role="tab"
+            aria-controls="pane-users" aria-selected="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill me-1" viewBox="0 0 16 16">
+        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+      </svg>
+      Usuarios
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="tab-results" data-bs-toggle="tab"
+            data-bs-target="#pane-results" type="button" role="tab"
+            aria-controls="pane-results" aria-selected="false">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart-fill me-1" viewBox="0 0 16 16">
+        <path d="M1 11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"/>
+      </svg>
+      Resultados
+    </button>
+  </li>
+</ul>
+
+<div class="tab-content" id="adminTabContent">
+
+  <!-- ========== TAB: USUARIOS ========== -->
+  <div class="tab-pane fade show active" id="pane-users" role="tabpanel" aria-labelledby="tab-users">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0" style="color:var(--c3);font-weight:600;">Usuarios registrados</h5>
+      <button class="btn btn-primary btn-sm" id="btnNewUser">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-plus-lg me-1" viewBox="0 0 16 16">
+          <path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+        </svg>
+        Nuevo usuario
+      </button>
+    </div>
+
+    <div class="app-card border-top-c1">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0" id="tblUsers">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Nombre completo</th>
+                <th>Grado</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="7" class="text-center text-muted py-4">
+                  <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                  Cargando usuarios…
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /pane-users -->
+
+
+  <!-- ========== TAB: RESULTADOS ========== -->
+  <div class="tab-pane fade" id="pane-results" role="tabpanel" aria-labelledby="tab-results">
+
+    <h5 class="mb-3" style="color:var(--c3);font-weight:600;">Selecciona un instrumento</h5>
+
+    <div id="instrumentCards" class="row g-3 mb-4">
+      <div class="col-12 text-center text-muted py-4">
+        <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+        Cargando instrumentos…
+      </div>
+    </div>
+
+    <!-- Detalle de resultados (se muestra al seleccionar instrumento) -->
+    <div id="resultsDetail" class="d-none">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0" id="resultsTitle" style="color:var(--c3);font-weight:600;"></h5>
+        <button class="btn btn-outline-secondary btn-sm" id="btnBackInstruments">← Volver</button>
+      </div>
+
+      <!-- Evaluadores -->
+      <div class="app-card border-top-c2 mb-4">
+        <div class="card-body">
+          <h6 class="section-kicker">Evaluadores</h6>
+          <div class="table-responsive">
+            <table class="table table-sm mb-0" id="tblEvaluadores">
+              <thead>
+                <tr>
+                  <th>Evaluador</th>
+                  <th>Grado</th>
+                  <th>Rol</th>
+                  <th>Peso</th>
+                  <th>Estado</th>
+                  <th>Enviado</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ranking de Categorías -->
+      <div class="app-card border-top-c1 mb-4">
+        <div class="card-body">
+          <h6 class="section-kicker">Ranking de Categorías (promedio ponderado)</h6>
+          <div class="table-responsive">
+            <table class="table table-sm mb-0" id="tblCatRanking">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Categoría</th>
+                  <th class="text-center">Rank Ponderado</th>
+                  <th class="text-center">Rank Promedio</th>
+                  <th class="text-center">Respuestas</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ranking de Ítems -->
+      <div class="app-card border-top-c3 mb-4">
+        <div class="card-body">
+          <h6 class="section-kicker">Ranking de Ítems por Categoría (promedio ponderado)</h6>
+          <div id="itemRankingContainer"></div>
+        </div>
+      </div>
+
+    </div><!-- /resultsDetail -->
+
+  </div><!-- /pane-results -->
+
+</div><!-- /tab-content -->
+
+
+<!-- ========== MODAL: Crear / Editar Usuario ========== -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background:var(--c3);color:#fff;">
+        <h5 class="modal-title" id="userModalLabel">Nuevo usuario</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="userForm" autocomplete="off">
+          <input type="hidden" id="uf_id" value="">
+
+          <div class="mb-3">
+            <label for="uf_username" class="form-label">Nombre de usuario <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="uf_username" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="uf_password" class="form-label">Contraseña <span class="text-danger" id="pwdReq">*</span></label>
+            <input type="password" class="form-control" id="uf_password">
+            <div class="form-text" id="pwdHint">Mínimo 4 caracteres.</div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="uf_nombre" class="form-label">Nombre(s) <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="uf_nombre" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="uf_grado" class="form-label">Grado</label>
+              <input type="text" class="form-control" id="uf_grado" placeholder="Ej: Lic., Mtro., Dr.">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="uf_ap" class="form-label">Apellido paterno <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="uf_ap" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="uf_am" class="form-label">Apellido materno</label>
+              <input type="text" class="form-control" id="uf_am">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="uf_rol" class="form-label">Rol <span class="text-danger">*</span></label>
+              <select class="form-select" id="uf_rol" required>
+                <option value="">Seleccionar…</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="uf_active" class="form-label">Estado</label>
+              <select class="form-select" id="uf_active">
+                <option value="1">Activo</option>
+                <option value="0">Inactivo</option>
+              </select>
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btnSaveUser">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/admin_users.js') }}"></script>
+<script src="{{ url_for('static', filename='js/admin_results.js') }}"></script>
+{% endblock %}

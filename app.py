@@ -19,6 +19,7 @@ from mysql.connector import pooling, Error as MySQLError
 from routes.auth import bp as auth_bp
 from routes.eval import bp as eval_bp
 from routes.api import bp as api_bp
+from routes.admin import bp as admin_bp
 
 
 # -----------------------------------------------------------------------------
@@ -87,8 +88,10 @@ CORS(app, resources={r"/api/*": {"origins": cors_origins}})
 
 @app.get("/")
 def index():
-    """Entrada por defecto: redirige a login o dashboard."""
+    """Entrada por defecto: redirige a login o panel correspondiente."""
     if session.get("usuario_id"):
+        if session.get("is_admin"):
+            return redirect(url_for("admin.panel"))
         return redirect(url_for("eval.dashboard"))
     return redirect(url_for("auth.login"))
 
@@ -234,6 +237,7 @@ app.db_transaction = db_transaction
 app.register_blueprint(auth_bp)            # /login, /logout, etc.
 app.register_blueprint(eval_bp)            # /dashboard, /evaluar/...
 app.register_blueprint(api_bp, url_prefix="/api")  # /api/*
+app.register_blueprint(admin_bp)           # /admin
 
 
 # -----------------------------------------------------------------------------

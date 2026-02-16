@@ -594,3 +594,296 @@ def admin_reopen(evaluacion_id: int):
     except Exception:
         rollback()
         return _json_error("db_error_reopen", 500)
+
+
+# ================================================================
+# ADMIN: Gestión de Usuarios
+# ================================================================
+
+@bp.get("/admin/roles")
+def admin_list_roles():
+    """Lista todos los roles activos."""
+    if not _require_login():
+        return _json_error("unauthorized", 401)
+    if not _is_admin():
+        return _json_error("forbidden", 403)
+
+    rows = query_all(
+        "SELECT rol_id, nombre, peso FROM rol WHERE is_active=1 ORDER BY peso DESC"
+    )
+    return jsonify(rows)
+
+
+@bp.get("/admin/users")
+def admin_list_users():
+    """Lista todos los usuarios con su rol."""
+    if not _require_login():
+        return _json_error("unauthorized", 401)
+    if not _is_admin():
+        return _json_error("forbidden", 403)
+
+    rows = query_all(
+        "SELECT u.usuario_id, u.nombre_usuario, u.nombre, "
+        "       u.apellido_paterno, u.apellido_materno, u.grado, "
+        "       u.rol_id, r.nombre AS rol_nombre, u.is_active, u.created_at "
+        "FROM usuario u "
+        "JOIN rol r ON r.rol_id = u.rol_id "
+        "ORDER BY u.usuario_id"
+    )
+    return jsonify(rows)
+
+
+@bp.post("/admin/users")
+def admin_create_user():
+    """Crea un nuevo usuario."""
+    if not _require_login():
+        return _json_error("unauthorized", 401)
+    if not _is_admin():
+        return _json_error("forbidden", 403)
+
+    import hashlib
+
+    data = request.get_json(silent=True) or {}
+    nombre_usuario = (data.get("nombre_usuario") or "").strip()
+    password = (data.get("password") or "").strip()
+    nombre = (data.get("nombre") or "").strip()
+    apellido_paterno = (data.get("apellido_paterno") or "").strip()
+    apellido_materno = (data.get("apellido_materno") or "").strip()
+    grado = (data.get("grado") or "").strip()
+    rol_id = data.get("rol_id")
+
+    if not nombre_usuario or not password or not nombre or not apellido_paterno or not rol_id:
+        return _json_error("Campos obligatorios: nombre_usuario, password, nombre, apellido_paterno, rol_id", 400)
+
+    # Verificar que no exista
+    existing = query_one(
+        "SELECT usuario_id FROM usuario WHERE nombre_usuario=%s", (nombre_usuario,)
+    )
+    if existing:
+        return _json_error("El nombre de usuario ya existe.", 409)
+
+    # Verificar rol válido
+    rol = query_one("SELECT rol_id FROM rol WHERE rol_id=%s AND is_active=1", (int(rol_id),))
+    if not rol:
+        return _json_error("Rol no válido.", 400)
+
+    password_sha256 = hashlib.sha256(password.encode("utf-8")).hexdigest()
+
+    try:
+        new_id = execute(
+            "INSERT INTO usuario (nombre_usuario, password_sha256, nombre, apellido_paterno, "
+            "apellido_materno, grado, rol_id, is_active) VALUES (%s,%s,%s,%s,%s,%s,%s,1)",
+            (nombre_usuario, password_sha256, nombre, apellido_paterno,
+             apellido_materno, grado, int(rol_id))
+        )
+        commit()
+        return jsonify({"ok": True, "usuario_id": new_id}), 201
+    except Exception as e:
+        rollback()
+        if _is_duplicate_error(e):
+            return _json_error("El nombre de usuario ya existe.", 409)
+        return _json_error("Error al crear usuario.", 500)
+
+
+@bp.put("/admin/users/<int:usuario_id>")
+def admin_update_user(usuario_id: int):
+    """Actualiza datos de un usuario (sin cambiar password si no se envía)."""
+    if not _require_login():
+        return _json_error("unauthorized", 401)
+    if not _is_admin():
+        return _json_error("forbidden", 403)
+
+    import hashlib
+
+    data = request.get_json(silent=True) or {}
+
+    user = query_one("SELECT usuario_id FROM usuario WHERE usuario_id=%s", (usuario_id,))
+    if not user:
+        return _json_error("Usuario no encontrado.", 404)
+
+    nombre_usuario = (data.get("nombre_usuario") or "").strip()
+    nombre = (data.get("nombre") or "").strip()
+    apellido_paterno = (data.get("apellido_paterno") or "").strip()
+    apellido_materno = (data.get("apellido_materno") or "").strip()
+    grado = (data.get("grado") or "").strip()
+    rol_id = data.get("rol_id")
+    is_active = data.get("is_active")
+    password = (data.get("password") or "").strip()
+
+    if not nombre_usuario or not nombre or not apellido_paterno or not rol_id:
+        return _json_error("Campos obligatorios: nombre_usuario, nombre, apellido_paterno, rol_id", 400)
+
+    # Verificar username único (excepto el mismo)
+    existing = query_one(
+        "SELECT usuario_id FROM usuario WHERE nombre_usuario=%s AND usuario_id<>%s",
+        (nombre_usuario, usuario_id)
+    )
+    if existing:
+        return _json_error("El nombre de usuario ya existe.", 409)
+
+    # Verificar rol válido
+    rol = query_one("SELECT rol_id FROM rol WHERE rol_id=%s AND is_active=1", (int(rol_id),))
+    if not rol:
+        return _json_error("Rol no válido.", 400)
+
+    try:
+        if password:
+            password_sha256 = hashlib.sha256(password.encode("utf-8")).hexdigest()
+            execute(
+                "UPDATE usuario SET nombre_usuario=%s, password_sha256=%s, nombre=%s, "
+                "apellido_paterno=%s, apellido_materno=%s, grado=%s, rol_id=%s, is_active=%s "
+                "WHERE usuario_id=%s",
+                (nombre_usuario, password_sha256, nombre, apellido_paterno,
+                 apellido_materno, grado, int(rol_id),
+                 1 if is_active in (True, 1, "1") else 0,
+                 usuario_id)
+            )
+        else:
+            execute(
+                "UPDATE usuario SET nombre_usuario=%s, nombre=%s, "
+                "apellido_paterno=%s, apellido_materno=%s, grado=%s, rol_id=%s, is_active=%s "
+                "WHERE usuario_id=%s",
+                (nombre_usuario, nombre, apellido_paterno,
+                 apellido_materno, grado, int(rol_id),
+                 1 if is_active in (True, 1, "1") else 0,
+                 usuario_id)
+            )
+        commit()
+        return jsonify({"ok": True})
+    except Exception as e:
+        rollback()
+        if _is_duplicate_error(e):
+            return _json_error("El nombre de usuario ya existe.", 409)
+        return _json_error("Error al actualizar usuario.", 500)
+
+
+@bp.delete("/admin/users/<int:usuario_id>")
+def admin_delete_user(usuario_id: int):
+    """Desactiva (soft-delete) un usuario."""
+    if not _require_login():
+        return _json_error("unauthorized", 401)
+    if not _is_admin():
+        return _json_error("forbidden", 403)
+
+    # No permitir desactivarse a sí mismo
+    if usuario_id == _usuario_id():
+        return _json_error("No puedes desactivar tu propia cuenta.", 400)
+
+    user = query_one("SELECT usuario_id FROM usuario WHERE usuario_id=%s", (usuario_id,))
+    if not user:
+        return _json_error("Usuario no encontrado.", 404)
+
+    try:
+        execute("UPDATE usuario SET is_active=0 WHERE usuario_id=%s", (usuario_id,))
+        commit()
+        return jsonify({"ok": True})
+    except Exception:
+        rollback()
+        return _json_error("Error al desactivar usuario.", 500)
+
+
+# ================================================================
+# ADMIN: Dashboard de Resultados
+# ================================================================
+
+@bp.get("/admin/instruments")
+def admin_list_instruments():
+    """Lista instrumentos con conteos de evaluaciones."""
+    if not _require_login():
+        return _json_error("unauthorized", 401)
+    if not _is_admin():
+        return _json_error("forbidden", 403)
+
+    rows = query_all(
+        "SELECT i.instrumento_id, i.nombre, "
+        "  (SELECT COUNT(*) FROM evaluacion e WHERE e.instrumento_id=i.instrumento_id AND e.status='submitted') AS total_submitted, "
+        "  (SELECT COUNT(*) FROM evaluacion e WHERE e.instrumento_id=i.instrumento_id AND e.status='draft') AS total_draft "
+        "FROM instrumento i WHERE i.is_active=1 ORDER BY i.instrumento_id"
+    )
+    return jsonify(rows)
+
+
+@bp.get("/admin/results/<int:instrumento_id>")
+def admin_results(instrumento_id: int):
+    """
+    Resultados agregados para un instrumento.
+    Devuelve:
+      - evaluadores: lista de evaluaciones submitted con datos de usuario
+      - categorias: ranking promedio ponderado por categoría
+      - items: ranking promedio ponderado por ítem
+    """
+    if not _require_login():
+        return _json_error("unauthorized", 401)
+    if not _is_admin():
+        return _json_error("forbidden", 403)
+
+    ins = query_one(
+        "SELECT instrumento_id, nombre FROM instrumento WHERE instrumento_id=%s AND is_active=1",
+        (instrumento_id,)
+    )
+    if not ins:
+        return _json_error("instrumento_not_found", 404)
+
+    # ----- Evaluadores que han enviado -----
+    evaluadores = query_all(
+        "SELECT e.evaluacion_id, e.usuario_id, e.status, e.submitted_at, "
+        "       e.rol_peso_snapshot, "
+        "       u.nombre, u.apellido_paterno, u.apellido_materno, u.grado, "
+        "       r.nombre AS rol_nombre "
+        "FROM evaluacion e "
+        "JOIN usuario u ON u.usuario_id = e.usuario_id "
+        "JOIN rol r ON r.rol_id = e.rol_id_snapshot "
+        "WHERE e.instrumento_id=%s "
+        "ORDER BY e.status DESC, e.submitted_at DESC",
+        (instrumento_id,)
+    )
+
+    # ----- Rankings de categorías (promedio ponderado) -----
+    cat_rankings = query_all(
+        "SELECT c.categoria_code, c.orden, c.nombre, "
+        "       ROUND(SUM(ec.rank_value * e.rol_peso_snapshot) / SUM(e.rol_peso_snapshot), 2) AS rank_ponderado, "
+        "       ROUND(AVG(ec.rank_value), 2) AS rank_promedio, "
+        "       COUNT(ec.rank_value) AS total_respuestas "
+        "FROM categoria c "
+        "LEFT JOIN evaluacion_categoria ec ON ec.categoria_code = c.categoria_code "
+        "  AND ec.instrumento_id = c.instrumento_id "
+        "LEFT JOIN evaluacion e ON e.evaluacion_id = ec.evaluacion_id "
+        "  AND e.status = 'submitted' "
+        "WHERE c.instrumento_id=%s AND c.is_active=1 "
+        "GROUP BY c.categoria_code, c.orden, c.nombre "
+        "ORDER BY rank_ponderado ASC",
+        (instrumento_id,)
+    )
+
+    # ----- Rankings de ítems (promedio ponderado) por categoría -----
+    item_rankings = query_all(
+        "SELECT i.item_id, i.categoria_code, i.orden, i.codigo_visible, i.contenido, "
+        "       i.parent_item_id, "
+        "       ei.rank_group, "
+        "       ROUND(SUM(ei.rank_value * e.rol_peso_snapshot) / SUM(e.rol_peso_snapshot), 2) AS rank_ponderado, "
+        "       ROUND(AVG(ei.rank_value), 2) AS rank_promedio, "
+        "       COUNT(ei.rank_value) AS total_respuestas "
+        "FROM item i "
+        "LEFT JOIN evaluacion_item ei ON ei.item_id = i.item_id "
+        "LEFT JOIN evaluacion e ON e.evaluacion_id = ei.evaluacion_id "
+        "  AND e.status = 'submitted' "
+        "WHERE i.instrumento_id=%s AND i.is_active=1 "
+        "GROUP BY i.item_id, i.categoria_code, i.orden, i.codigo_visible, i.contenido, "
+        "         i.parent_item_id, ei.rank_group "
+        "ORDER BY i.categoria_code, i.orden",
+        (instrumento_id,)
+    )
+
+    for it in item_rankings:
+        it["parent_item_id"] = int(it["parent_item_id"]) if it.get("parent_item_id") else None
+        it["rank_group"] = int(it["rank_group"]) if it.get("rank_group") is not None else 0
+
+    return jsonify({
+        "instrumento": {
+            "instrumento_id": int(ins["instrumento_id"]),
+            "nombre": ins["nombre"]
+        },
+        "evaluadores": evaluadores,
+        "categorias": cat_rankings,
+        "items": item_rankings
+    })

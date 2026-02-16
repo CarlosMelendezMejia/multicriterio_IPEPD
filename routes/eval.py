@@ -12,7 +12,7 @@
 # - "submitted" será solo lectura para usuario; admin podrá reabrir via API.
 # ------------------------------------------------------------
 
-from flask import Blueprint, render_template, session, redirect, url_for, abort
+from flask import Blueprint, render_template, session, redirect, url_for, abort, flash
 from db import query_all, query_one
 
 bp = Blueprint("eval", __name__)
@@ -30,10 +30,22 @@ def is_admin() -> bool:
     return bool(session.get("is_admin", False))
 
 
+def _block_admin():
+    """Redirige admins al panel de administración; ellos no evalúan."""
+    if is_admin():
+        flash("Los administradores no pueden realizar evaluaciones.", "warning")
+        return redirect(url_for("admin.panel"))
+    return None
+
+
 @bp.get("/dashboard")
 def dashboard():
     if not require_login():
         return redirect(url_for("auth.login"))
+
+    blocked = _block_admin()
+    if blocked:
+        return blocked
 
     usuario_id = get_usuario_id()
 
@@ -89,6 +101,10 @@ def categorias(instrumento_id: int):
     if not require_login():
         return redirect(url_for("auth.login"))
 
+    blocked = _block_admin()
+    if blocked:
+        return blocked
+
     ins = query_one(
         "SELECT instrumento_id, nombre FROM instrumento WHERE instrumento_id=%s AND is_active=1",
         (instrumento_id,)
@@ -117,6 +133,10 @@ def items(instrumento_id: int, categoria_orden: int):
     """
     if not require_login():
         return redirect(url_for("auth.login"))
+
+    blocked = _block_admin()
+    if blocked:
+        return blocked
 
     ins = query_one(
         "SELECT instrumento_id, nombre FROM instrumento WHERE instrumento_id=%s AND is_active=1",
@@ -163,6 +183,10 @@ def resumen(instrumento_id: int):
     """
     if not require_login():
         return redirect(url_for("auth.login"))
+
+    blocked = _block_admin()
+    if blocked:
+        return blocked
 
     ins = query_one(
         "SELECT instrumento_id, nombre FROM instrumento WHERE instrumento_id=%s AND is_active=1",

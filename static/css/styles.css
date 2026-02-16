@@ -482,3 +482,67 @@ code {
     background-color: var(--c2) !important;
     color: #333 !important;
 }
+
+/* ============================================================================
+   ADMIN PANEL
+   ============================================================================ */
+
+/* Tabs estilizados */
+.admin-tabs .nav-link {
+    color: var(--c4);
+    font-weight: 500;
+    border: none;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+    padding: 0.65rem 1.25rem;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.admin-tabs .nav-link:hover {
+    color: var(--c1);
+    border-bottom-color: rgba(191, 135, 31, 0.3);
+}
+
+.admin-tabs .nav-link.active {
+    color: var(--c1);
+    border-bottom-color: var(--c1);
+    background: transparent;
+    font-weight: 600;
+}
+
+/* Instrument cards clickable */
+.card-instrument {
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.card-instrument:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+}
+
+/* Modal header */
+#userModal .modal-header {
+    border-bottom: 3px solid var(--c1);
+}
+
+#userModal .modal-footer {
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Results ranking highlight row */
+.rank-top-row {
+    background-color: rgba(191, 135, 31, 0.08);
+}
+
+/* Admin table tighter styling */
+#pane-users .table td,
+#pane-users .table th {
+    vertical-align: middle;
+}
+
+#pane-results .table td,
+#pane-results .table th {
+    vertical-align: middle;
+}
+
