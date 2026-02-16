@@ -851,7 +851,7 @@ def admin_results(instrumento_id: int):
         "  AND e.status = 'submitted' "
         "WHERE c.instrumento_id=%s AND c.is_active=1 "
         "GROUP BY c.categoria_code, c.orden, c.nombre "
-        "ORDER BY rank_ponderado ASC",
+        "ORDER BY rank_ponderado DESC",
         (instrumento_id,)
     )
 

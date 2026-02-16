@@ -144,8 +144,8 @@
         subByParent[pid].push(si);
       });
 
-      // Ordenar main items por rank_ponderado (asc)
-      mainItems.sort((a, b) => (a.rank_ponderado || 999) - (b.rank_ponderado || 999));
+      // Ordenar main items por rank_ponderado (desc - mayor a menor)
+      mainItems.sort((a, b) => (b.rank_ponderado || 999999) - (a.rank_ponderado || 999999));
 
       html += `
         <div class="mb-3">
@@ -183,7 +183,7 @@
         // Sub-items for this parent
         const subs = subByParent[it.item_id];
         if (subs && subs.length) {
-          subs.sort((a, b) => (a.rank_ponderado || 999) - (b.rank_ponderado || 999));
+          subs.sort((a, b) => (b.rank_ponderado || 999999) - (a.rank_ponderado || 999999));
           subs.forEach((si, sIdx) => {
             const srp = si.rank_ponderado ?? "—";
             const sra = si.rank_promedio ?? "—";
