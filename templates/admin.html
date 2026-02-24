@@ -124,19 +124,28 @@
       <div class="app-card border-top-c1 mb-4">
         <div class="card-body">
           <h6 class="section-kicker">Ranking de Categorías (promedio ponderado)</h6>
-          <div class="table-responsive">
-            <table class="table table-sm mb-0" id="tblCatRanking">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Categoría</th>
-                  <th class="text-center">Rank Ponderado</th>
-                  <th class="text-center">Rank Promedio</th>
-                  <th class="text-center">Respuestas</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
+          <div class="row align-items-start">
+            <div class="col-lg-7">
+              <div class="table-responsive">
+                <table class="table table-sm mb-0" id="tblCatRanking">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Categoría</th>
+                      <th class="text-center">Rank Ponderado</th>
+                      <th class="text-center">Rank Promedio</th>
+                      <th class="text-center">Respuestas</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="col-lg-5">
+              <div class="radar-chart-wrapper">
+                <canvas id="radarCategorias"></canvas>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -146,6 +155,16 @@
         <div class="card-body">
           <h6 class="section-kicker">Ranking de Ítems por Categoría (promedio ponderado)</h6>
           <div id="itemRankingContainer"></div>
+        </div>
+      </div>
+
+      <!-- Gráficas de Radar por Categoría -->
+      <div id="radarItemsSection" class="d-none">
+        <div class="app-card border-top-c2 mb-4">
+          <div class="card-body">
+            <h6 class="section-kicker">Gráficas de Radar — Ítems por Categoría</h6>
+            <div id="radarItemsContainer" class="row g-3"></div>
+          </div>
         </div>
       </div>
 
@@ -230,6 +249,7 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="{{ url_for('static', filename='js/admin_users.js') }}"></script>
 <script src="{{ url_for('static', filename='js/admin_results.js') }}"></script>
 {% endblock %}

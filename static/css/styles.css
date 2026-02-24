@@ -546,3 +546,48 @@ code {
     vertical-align: middle;
 }
 
+/* ============================================================================
+   RADAR CHARTS – Resultados
+   ============================================================================ */
+.radar-chart-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+    padding: 0.5rem 0;
+}
+
+.radar-chart-wrapper--sm {
+    max-width: 280px;
+}
+
+.radar-chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: 1rem 0.75rem 0.75rem;
+    text-align: center;
+    transition: box-shadow 0.2s ease;
+}
+
+.radar-chart-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+}
+
+.radar-chart-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--c3);
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.2px;
+}
+
+@media (max-width: 768px) {
+    .radar-chart-wrapper {
+        max-width: 260px;
+    }
+    .radar-chart-wrapper--sm {
+        max-width: 220px;
+    }
+}
+
